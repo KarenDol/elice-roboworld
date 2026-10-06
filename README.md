@@ -21,7 +21,7 @@ The first load fetches a Python engine (Pyodide) from a CDN. After that, student
 
 ## SQL block
 
-Switch to **SQL** in the top bar. Lessons use a library database (`students`, `books`, `loans`) and real SQLite in the browser, loaded the same way as Pyodide. Run shows the result table and the updated database. Submit checks the result, or the table after `INSERT` and `UPDATE`.
+Switch to **SQL** in the top bar. Lessons use a Kazakhstan library database (`students`, `books`, `loans`) and real SQLite in the browser, loaded the same way as Pyodide. Run shows the result table and the updated database. Submit checks the result, or the table after `INSERT` and `UPDATE`.
 
 ## Explain (ChatGPT hints)
 

@@ -56,11 +56,11 @@ export function expectQuery(
   return { passed: true, message: success };
 }
 
-export function gradeMina(output: SqlOutput): GradeResult {
+export function gradeAmina(output: SqlOutput): GradeResult {
   const students = output.tables.find((table) => table.name === "students");
   if (!students) return { passed: false, message: "The students table is missing." };
   if (students.rows.length === 0) {
-    return { passed: false, message: "The students table is empty. Add Mina and keep the original rows." };
+    return { passed: false, message: "The students table is empty. Add Amina and keep the original rows." };
   }
 
   const nameCol = columnIndex(students, "name");
@@ -70,21 +70,21 @@ export function gradeMina(output: SqlOutput): GradeResult {
     return { passed: false, message: "students needs name, year, and city columns." };
   }
 
-  const mina = students.rows.filter((row) => row[nameCol] === "Mina");
-  if (mina.length === 0) return { passed: false, message: "No student named Mina yet." };
-  if (mina.length > 1) return { passed: false, message: "Add Mina only once." };
-  if (Number(mina[0][yearCol]) !== 1 || mina[0][cityCol] !== "Busan") {
-    return { passed: false, message: "Mina should be in year 1 and live in Busan." };
+  const amina = students.rows.filter((row) => row[nameCol] === "Amina");
+  if (amina.length === 0) return { passed: false, message: "No student named Amina yet." };
+  if (amina.length > 1) return { passed: false, message: "Add Amina only once." };
+  if (Number(amina[0][yearCol]) !== 1 || amina[0][cityCol] !== "Karaganda") {
+    return { passed: false, message: "Amina should be in year 1 and live in Karaganda." };
   }
   if (students.rows.length !== 6) {
-    return { passed: false, message: "Keep the original 5 students and add only Mina (6 rows)." };
+    return { passed: false, message: "Keep the original 5 students and add only Amina (6 rows)." };
   }
 
   const names = new Set(students.rows.map((row) => String(row[nameCol])));
-  for (const name of ["Ara", "Ben", "Cleo", "Dan", "Eve"]) {
+  for (const name of ["Aigerim", "Bekzat", "Dana", "Erlan", "Fariza"]) {
     if (!names.has(name)) return { passed: false, message: `Keep ${name} in the table.` };
   }
-  return { passed: true, message: "Correct! Mina is in the students table." };
+  return { passed: true, message: "Correct! Amina is in the students table." };
 }
 
 export function gradeLoanReturned(output: SqlOutput): GradeResult {

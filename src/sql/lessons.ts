@@ -1,5 +1,5 @@
 import type { GradeResult } from "../engine/types";
-import { expectQuery, gradeLoanReturned, gradeMina } from "./grade";
+import { expectQuery, gradeAmina, gradeLoanReturned } from "./grade";
 import type { SqlOutput } from "./types";
 
 export type SqlLesson = {
@@ -40,11 +40,11 @@ CREATE TABLE students (
 );
 
 INSERT INTO students (id, name, year, city) VALUES
-  (1, 'Ara', 1, 'Seoul'),
-  (2, 'Ben', 2, 'Busan'),
-  (3, 'Cleo', 2, 'Seoul'),
-  (4, 'Dan', 3, 'Incheon'),
-  (5, 'Eve', 1, 'Busan');
+  (1, 'Aigerim', 1, 'Almaty'),
+  (2, 'Bekzat', 2, 'Astana'),
+  (3, 'Dana', 2, 'Almaty'),
+  (4, 'Erlan', 3, 'Shymkent'),
+  (5, 'Fariza', 1, 'Astana');
 
 CREATE TABLE books (
   id INTEGER PRIMARY KEY,
@@ -54,10 +54,10 @@ CREATE TABLE books (
 );
 
 INSERT INTO books (id, title, author, pages) VALUES
-  (1, 'River Notes', 'H. Kim', 180),
-  (2, 'Grid Worlds', 'L. Park', 96),
-  (3, 'Quiet SQL', 'M. Cho', 240),
-  (4, 'Leaf Paths', 'H. Kim', 128);
+  (1, 'Abai Zholy', 'M. Auezov', 180),
+  (2, 'Steppe Wind', 'S. Seifullin', 96),
+  (3, 'The Nomads', 'I. Esenberlin', 240),
+  (4, 'Az i Ya', 'O. Suleimenov', 128);
 
 CREATE TABLE loans (
   id INTEGER PRIMARY KEY,
@@ -87,7 +87,7 @@ export const SQL_LESSONS: SqlLesson[] = [
     minutes: 5,
     goal: "List every student name.",
     instructions: [
-      "The database on the right is a small library. Start with the `students` table.",
+      "The database on the right is a library in Kazakhstan. Start with the `students` table.",
       "Use `SELECT` to read one column and `FROM` to name the table.",
       "Return only the `name` column, for every row.",
     ],
@@ -102,7 +102,7 @@ FROM students;
       expectQuery(
         output,
         ["name"],
-        [["Ara"], ["Ben"], ["Cleo"], ["Dan"], ["Eve"]],
+        [["Aigerim"], ["Bekzat"], ["Dana"], ["Erlan"], ["Fariza"]],
         false,
         "Correct! Every student name is listed.",
       ),
@@ -131,8 +131,8 @@ FROM students;
         output,
         ["name", "city"],
         [
-          ["Ben", "Busan"],
-          ["Cleo", "Seoul"],
+          ["Bekzat", "Astana"],
+          ["Dana", "Almaty"],
         ],
         false,
         "Correct! Those are the year 2 students.",
@@ -162,10 +162,10 @@ FROM books;
         output,
         ["title", "pages"],
         [
-          ["Grid Worlds", 96],
-          ["Leaf Paths", 128],
-          ["River Notes", 180],
-          ["Quiet SQL", 240],
+          ["Steppe Wind", 96],
+          ["Az i Ya", 128],
+          ["Abai Zholy", 180],
+          ["The Nomads", 240],
         ],
         true,
         "Correct! The books are sorted by length.",
@@ -196,9 +196,9 @@ FROM students;
         output,
         ["city", "n"],
         [
-          ["Busan", 2],
-          ["Incheon", 1],
-          ["Seoul", 2],
+          ["Almaty", 2],
+          ["Astana", 2],
+          ["Shymkent", 1],
         ],
         true,
         "Correct! The city counts match.",
@@ -233,9 +233,9 @@ JOIN books ON books.id = loans.book_id;
         output,
         ["name", "title"],
         [
-          ["Ara", "Grid Worlds"],
-          ["Ara", "Leaf Paths"],
-          ["Cleo", "Quiet SQL"],
+          ["Aigerim", "Az i Ya"],
+          ["Aigerim", "Steppe Wind"],
+          ["Dana", "The Nomads"],
         ],
         true,
         "Correct! Those books are still out.",
@@ -246,20 +246,20 @@ JOIN books ON books.id = loans.book_id;
     index: 6,
     title: "Insert",
     minutes: 10,
-    goal: "Add Mina to students: year 1, city Busan.",
+    goal: "Add Amina to students: year 1, city Karaganda.",
     instructions: [
       "`INSERT INTO students (name, year, city) VALUES (...)` adds one row.",
       "You do not need to set `id`. The table fills it in.",
-      "Keep Ara, Ben, Cleo, Dan, and Eve. Add only Mina.",
+      "Keep Aigerim, Bekzat, Dana, Erlan, and Fariza. Add only Amina.",
     ],
     hint: `INSERT INTO students (name, year, city)
-VALUES ('Mina', 1, 'Busan');`,
-    skeleton: `-- Add Mina (year 1, city Busan).
+VALUES ('Amina', 1, 'Karaganda');`,
+    skeleton: `-- Add Amina (year 1, city Karaganda).
 INSERT INTO students (name, year, city)
-VALUES ('Mina', 1, '');
+VALUES ('Amina', 1, '');
 `,
     focus: ["students"],
-    grade: gradeMina,
+    grade: gradeAmina,
   },
   {
     id: "update-loan",
