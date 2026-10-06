@@ -1,10 +1,22 @@
-import type { Lesson } from "../lessons";
+import type { Track } from "../track";
+
+type LessonOption = {
+  id: string;
+  index: number;
+  title: string;
+};
 
 type Props = {
-  lessons: Lesson[];
-  lesson: Lesson;
-  pythonReady: boolean;
+  lessons: LessonOption[];
+  lesson: { id: string };
+  engineReady: boolean;
+  engineReadyLabel?: string;
+  engineLoadingLabel?: string;
+  actionsEnabled?: boolean;
   busy: boolean;
+  product?: string;
+  track?: Track;
+  onTrack?: (track: Track) => void;
   onSelect: (id: string) => void;
   onRun: () => void;
   onSubmit: () => void;
@@ -16,8 +28,14 @@ type Props = {
 export function TopBar({
   lessons,
   lesson,
-  pythonReady,
+  engineReady,
+  engineReadyLabel = "Python ready",
+  engineLoadingLabel = "Loading Python",
+  actionsEnabled,
   busy,
+  product = "RoboWorld",
+  track = "python",
+  onTrack,
   onSelect,
   onRun,
   onSubmit,
@@ -25,6 +43,7 @@ export function TopBar({
   onExplain,
   explaining,
 }: Props) {
+  const canRun = actionsEnabled ?? engineReady;
   return (
     <header className="topbar">
       <div className="brand">
@@ -33,8 +52,32 @@ export function TopBar({
         </div>
         <div className="brand-text">
           <strong>Elice</strong>
-          <span>RoboWorld</span>
+          <span>{product}</span>
         </div>
+      </div>
+      <div className="track-switch" role="group" aria-label="Practice block">
+        <button
+          type="button"
+          className={track === "python" ? "is-active" : ""}
+          aria-pressed={track === "python"}
+          disabled={busy}
+          onClick={() => {
+            if (track !== "python") onTrack?.("python");
+          }}
+        >
+          Python
+        </button>
+        <button
+          type="button"
+          className={track === "sql" ? "is-active" : ""}
+          aria-pressed={track === "sql"}
+          disabled={busy}
+          onClick={() => {
+            if (track !== "sql") onTrack?.("sql");
+          }}
+        >
+          SQL
+        </button>
       </div>
       <label className="lesson-select">
         <span className="sr-only">Select lesson</span>
@@ -47,9 +90,9 @@ export function TopBar({
         </select>
       </label>
       <div className="spacer" />
-      <div className={`engine-pill${pythonReady ? " is-ready" : ""}`}>
+      <div className={`engine-pill${engineReady ? " is-ready" : ""}`}>
         <span className="pulse" />
-        {pythonReady ? "Python ready" : "Loading Python"}
+        {engineReady ? engineReadyLabel : engineLoadingLabel}
       </div>
       <button type="button" className="btn explain" onClick={onExplain} disabled={busy || explaining}>
         {explaining ? "Hinting…" : "Explain"}
@@ -57,10 +100,10 @@ export function TopBar({
       <button type="button" className="btn ghost" onClick={onReset} disabled={busy}>
         Reset
       </button>
-      <button type="button" className="btn primary" onClick={onRun} disabled={busy || !pythonReady}>
+      <button type="button" className="btn primary" onClick={onRun} disabled={busy || !canRun}>
         Run
       </button>
-      <button type="button" className="btn dark" onClick={onSubmit} disabled={busy || !pythonReady}>
+      <button type="button" className="btn dark" onClick={onSubmit} disabled={busy || !canRun}>
         Submit
       </button>
     </header>

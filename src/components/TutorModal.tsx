@@ -5,10 +5,18 @@ type Props = {
   loading: boolean;
   hint: string | null;
   error: string | null;
+  loadingText?: string;
   onClose: () => void;
 };
 
-export function TutorModal({ open, loading, hint, error, onClose }: Props) {
+export function TutorModal({
+  open,
+  loading,
+  hint,
+  error,
+  loadingText = "Looking at your map and code…",
+  onClose,
+}: Props) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -39,7 +47,7 @@ export function TutorModal({ open, loading, hint, error, onClose }: Props) {
         </div>
         <p className="tutor-kicker">AI tutor</p>
         <h2 id="tutor-title">{title}</h2>
-        {loading ? <p className="tutor-body">Looking at your map and code…</p> : null}
+        {loading ? <p className="tutor-body">{loadingText}</p> : null}
         {error ? <p className="tutor-body">{error}</p> : null}
         {hint && !loading ? <p className="ai-text">{hint}</p> : null}
       </div>

@@ -4,19 +4,28 @@ import { memo } from "react";
 type Props = {
   source: string;
   onChange: (value: string) => void;
+  language?: string;
+  fileName?: string;
+  tabSize?: number;
 };
 
-export const EditorPane = memo(function EditorPane({ source, onChange }: Props) {
+export const EditorPane = memo(function EditorPane({
+  source,
+  onChange,
+  language = "python",
+  fileName = "main.py",
+  tabSize = 4,
+}: Props) {
   return (
     <div className="editor-pane">
       <div className="file-tab">
-        <span className="file-dot" />
-        main.py
+        <span className={`file-dot${language === "sql" ? " is-sql" : ""}`} />
+        {fileName}
       </div>
       <div className="editor-host">
         <Editor
           height="100%"
-          defaultLanguage="python"
+          defaultLanguage={language}
           defaultValue={source}
           onChange={(value) => onChange(value ?? "")}
           theme="elice-light"
@@ -51,7 +60,7 @@ export const EditorPane = memo(function EditorPane({ source, onChange }: Props) 
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             automaticLayout: true,
-            tabSize: 4,
+            tabSize,
             padding: { top: 12, bottom: 16 },
             renderLineHighlight: "line",
             smoothScrolling: true,

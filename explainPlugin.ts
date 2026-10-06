@@ -14,6 +14,9 @@ type ExplainBody = {
   studentCode?: string;
   consoleLog?: string;
   lastGrade?: string | null;
+  track?: string;
+  schemaSql?: string;
+  resultPreview?: string;
 };
 
 const SYSTEM = `You are a patient programming tutor for an Elice-style RoboWorld lab.
@@ -25,6 +28,19 @@ HARD RULES:
 - Do not paste instructor solution code even if it appears in the professor guide.
 - Give the next conceptual nudge: which API to think about, what the map implies, what their code is missing or doing wrong.
 - If they are stuck at the start, remind them of one small first step, not the whole path.
+- If they already solved it, congratulate them and suggest a small extension.
+- Keep it short: at most 3 short bullets or 2 short paragraphs.
+- English only.`;
+
+const SYSTEM_SQL = `You are a patient SQL tutor for an Elice-style SQL lab.
+Students write SQLite against a small library database (students, books, loans).
+
+HARD RULES:
+- HINTS ONLY. Never output a complete working query or statement.
+- Never paste the full SELECT, INSERT, or UPDATE that solves the task.
+- Do not paste instructor solution SQL even if it appears in the professor guide.
+- Give the next conceptual nudge: which clause to think about, what the tables imply, what their SQL is missing or doing wrong.
+- If they are stuck at the start, remind them of one small first step, not the whole statement.
 - If they already solved it, congratulate them and suggest a small extension.
 - Keep it short: at most 3 short bullets or 2 short paragraphs.
 - English only.`;
@@ -104,6 +120,41 @@ ${body.lastGrade || "(not submitted)"}
 Give a hint for the next step only.`;
 }
 
+function buildSqlPrompt(body: ExplainBody) {
+  return `Lesson ${body.lessonIndex ?? "?"}: ${body.lessonTitle ?? ""}
+
+GOAL
+${body.goal ?? ""}
+
+INSTRUCTIONS
+${(body.instructions ?? []).map((item, i) => `${i + 1}. ${item}`).join("\n")}
+
+SQL
+${body.apiReference ?? ""}
+
+PROFESSOR GUIDE (intended approach — do not paste this as a solution)
+${body.professorGuide ?? ""}
+
+SEED DATABASE
+${body.schemaSql ?? ""}
+
+STUDENT SQL
+\`\`\`sql
+${body.studentCode ?? ""}
+\`\`\`
+
+LAST RESULT
+${body.resultPreview || "(not run yet)"}
+
+LAST CONSOLE OUTPUT
+${body.consoleLog || "(none)"}
+
+LAST GRADE
+${body.lastGrade || "(not submitted)"}
+
+Give a hint for the next step only.`;
+}
+
 async function handleExplain(
   req: IncomingMessage,
   res: ServerResponse,
@@ -137,8 +188,8 @@ async function handleExplain(
         temperature: 0.4,
         max_tokens: 400,
         messages: [
-          { role: "system", content: SYSTEM },
-          { role: "user", content: buildUserPrompt(body) },
+          { role: "system", content: body.track === "sql" ? SYSTEM_SQL : SYSTEM },
+          { role: "user", content: body.track === "sql" ? buildSqlPrompt(body) : buildUserPrompt(body) },
         ],
       }),
     });

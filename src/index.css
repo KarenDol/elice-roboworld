@@ -557,6 +557,123 @@ body {
 
 .workspace.problem-collapsed .problem-pane { display: none; }
 
+.topbar { overflow-x: auto; }
+.lesson-select select { min-width: 210px; }
+
+.track-switch {
+  display: flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 10px;
+  background: var(--surface);
+  flex: 0 0 auto;
+}
+.track-switch button {
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 13px var(--font);
+  cursor: pointer;
+}
+.track-switch button.is-active {
+  background: white;
+  color: var(--indigo);
+  box-shadow: 0 1px 2px rgba(25, 31, 40, 0.08);
+}
+.track-switch button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.track-switch button:disabled.is-active {
+  opacity: 1;
+}
+
+.file-dot.is-sql { background: var(--sky); }
+
+.sim-body.is-sql {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  overflow: auto;
+}
+
+.sql-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.sql-empty {
+  margin: 0;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.sql-card {
+  background: white;
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  overflow: auto;
+}
+.sql-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  border-bottom: 1px solid var(--hair);
+  background: white;
+}
+.sql-card header span:last-child {
+  font-weight: 500;
+  color: var(--muted);
+}
+.sql-card.is-result { border-color: #d9d0fb; }
+.sql-card.is-result header {
+  background: #f6f4ff;
+  color: var(--indigo);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 12px/1.4 var(--mono);
+}
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--hair);
+  white-space: nowrap;
+}
+.data-table th {
+  color: var(--muted);
+  font-weight: 600;
+  font-family: var(--font);
+  font-size: 11px;
+}
+.data-null {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.grade.is-inline {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  margin: 0;
+}
+
 @media (max-width: 720px) {
   .problem-pane { display: none; }
   .collapse { display: none; }

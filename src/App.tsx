@@ -10,6 +10,7 @@ import { loadPython, runStudentCode } from "./engine/runPython";
 import { cloneWorld } from "./engine/world";
 import { requestHint } from "./engine/explain";
 import { LESSONS, lessonWorld, type Lesson } from "./lessons";
+import type { Track } from "./track";
 
 const CODE_KEY = "elice-roboworld-code-en";
 const LEGACY_CODE_KEY = "elice-roboworld-code";
@@ -70,7 +71,12 @@ function readEditorValue(fallback: string) {
   return monaco?.editor?.getEditors?.()[0]?.getValue() ?? fallback;
 }
 
-export default function App() {
+type Props = {
+  track?: Track;
+  onTrack?: (track: Track) => void;
+};
+
+export default function App({ track = "python", onTrack }: Props) {
   const [lessonId, setLessonId] = useState(LESSONS[0].id);
   const lesson = LESSONS.find((item) => item.id === lessonId) ?? LESSONS[0];
   const initialWorld = useMemo(() => lessonWorld(lesson), [lesson]);
@@ -316,8 +322,13 @@ export default function App() {
       <TopBar
         lessons={LESSONS}
         lesson={lesson}
-        pythonReady={pythonReady}
+        engineReady={pythonReady}
+        engineReadyLabel="Python ready"
+        engineLoadingLabel="Loading Python"
         busy={busy}
+        product="RoboWorld"
+        track={track}
+        onTrack={onTrack}
         onSelect={setLessonId}
         onRun={() => void execute("run")}
         onSubmit={() => void execute("submit")}
